@@ -5,14 +5,14 @@ const options = { "content-type": "aplication/json" };
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET") {
-    if (req.url === "/products/list") {
+    if (req.url === "/product/list") {
       res.writeHead(200, options);
       res.end(JSON.stringify(read_file(productsFileName)));
     }
   }
 
   if (req.method === "POST") {
-    if (req.url === "/create/product") {
+    if (req.url === "/product/create") {
       req.on("data", (chunk) => {
         const newProduct = JSON.parse(chunk);
         const products = read_file(productsFileName);
