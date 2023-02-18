@@ -35,7 +35,6 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === "PUT") {
-    console.log("keldi")
     if (req.url === `/product/update/${productId}`) {
       req.on("data", (newData) => {
         const { title, price } = JSON.parse(newData);
@@ -48,7 +47,7 @@ const server = http.createServer((req, res) => {
             product.price = price ? price : product.price;
             fileChanged = true;
             res.writeHead(200, options);
-            res.end(JSON.stringify({ msg: "Successfully updated!" }));
+            return res.end(JSON.stringify({ msg: "Successfully updated!" }));
           }
         });
 
@@ -58,6 +57,26 @@ const server = http.createServer((req, res) => {
           res.end(JSON.stringify({ msg: "Product not founded" }));
         }
       });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    if (req.url === `/product/destroy/${productId}`) {
+      const productsArr = read_file(productsFileName);
+      const destroy = productsArr.findIndex(
+        (product) => product.id == productId
+      );
+
+      if (destroy == -1) {
+        res.writeHead(404, options);
+        res.end(JSON.stringify({ msg: "Product not found" }));
+      } else {
+        productsArr.splice(destroy, 1);
+        write_file(productsFileName, productsArr);
+        console.log(productsArr);
+        res.writeHead(200, options);
+        res.end(JSON.stringify({ msg: "Deleted!" }));
+      }
     }
   }
 });
