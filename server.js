@@ -15,9 +15,8 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(read_file(productsFileName)));
     }
     if (req.url === `/product/retrieve/${productId}`) {
-      const productsArr = read_file(productsFileName);
-      const fond = productsArr.find(({ id }) => id === productId);
-      if (fond) {
+      const found = read_file(productsFileName).find(({ id }) => id === productId);
+      if (found) {
         res.writeHead(200, options);
         res.end(JSON.stringify(fond));
       } else {
