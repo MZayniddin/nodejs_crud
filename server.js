@@ -14,6 +14,17 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, options);
       res.end(JSON.stringify(read_file(productsFileName)));
     }
+    if (req.url === `/product/retrieve/${productId}`) {
+      const productsArr = read_file(productsFileName);
+      const fond = productsArr.find(({ id }) => id === productId);
+      if (fond) {
+        res.writeHead(200, options);
+        res.end(JSON.stringify(fond));
+      } else {
+        res.writeHead(404, options);
+        res.end(JSON.stringify({ msg: "Product not found" }));
+      }
+    }
   }
 
   if (req.method === "POST") {

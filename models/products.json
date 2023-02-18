@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Apple",
+    "price": 124
+  },
+  {
+    "id": 2,
+    "title": "Banana",
+    "price": 1994
+  },
+  {
+    "id": 3,
+    "title": "Cucumber",
+    "price": 1123
+  }
+]
