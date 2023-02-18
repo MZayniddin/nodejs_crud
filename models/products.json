@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "Samsung TV",
+    "price": 600
+  },
+  {
+    "id": 2,
+    "title": "iPhone 14 Pro Max",
+    "price": 1850
+  },
+  {
+    "id": 3,
+    "title": "Smart Watch",
+    "price": 200
+  }
+]
