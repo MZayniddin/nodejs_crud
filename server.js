@@ -1,5 +1,6 @@
 const http = require("http");
 const { read_file, write_file } = require("./fs-functions/fs");
+const PORT = process.env.PORT || 3000;
 const productsFileName = "products.json";
 const usersFileName = "users.json";
 const options = {
@@ -27,9 +28,7 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ msg: "Product not found" }));
       }
     }
-  }
-
-  if (req.method === "POST") {
+  } else if (req.method === "POST") {
     if (req.url === "/product/create") {
       req.on("data", (chunk) => {
         const newProduct = JSON.parse(chunk);
@@ -93,9 +92,7 @@ const server = http.createServer((req, res) => {
         }
       });
     }
-  }
-
-  if (req.method === "PUT") {
+  } else if (req.method === "PUT") {
     if (req.url === `/product/update/${productId}`) {
       req.on("data", (newData) => {
         const { title, price } = JSON.parse(newData);
@@ -119,9 +116,7 @@ const server = http.createServer((req, res) => {
         }
       });
     }
-  }
-
-  if (req.method === "DELETE") {
+  } else if (req.method === "DELETE") {
     if (req.url === `/product/destroy/${productId}`) {
       const productsArr = read_file(productsFileName);
       const destroy = productsArr.findIndex(
@@ -142,6 +137,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(3000, () => {
-  console.log("server is running on 3000 port");
+server.listen(PORT, () => {
+  console.log("server is running on " + PORT);
 });
