@@ -1,6 +1,7 @@
 const http = require("http");
 const { read_file, write_file } = require("./fs-functions/fs");
 const productsFileName = "products.json";
+const usersFileName = "users.json";
 const options = {
   "content-type": "application/json",
   "Access-Control-Allow-Origin": "*",
@@ -15,7 +16,9 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(read_file(productsFileName)));
     }
     if (req.url === `/product/retrieve/${productId}`) {
-      const found = read_file(productsFileName).find(({ id }) => id === productId);
+      const found = read_file(productsFileName).find(
+        ({ id }) => id === productId
+      );
       if (found) {
         res.writeHead(200, options);
         res.end(JSON.stringify(fond));
@@ -42,6 +45,33 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ msg: "Successfully created" }));
       });
     }
+
+    if (req.url === "/auth/register") {
+      req.on("data", (chunk) => {
+        const { email, username, password, gender } = JSON.parse(chunk);
+        const allUsers = read_file(usersFileName);
+        const foundUser = allUsers.find((user) => user.email === email);
+
+        if (foundUser) {
+          res.writeHead(404, options);
+          res.end(JSON.stringify({ msg: "This email already exists!" }));
+        } else {
+          allUsers.push({
+            id: allUsers[allUsers.length - 1]
+              ? allUsers[allUsers.length - 1].id + 1
+              : 1,
+            email: email,
+            username: username,
+            password: btoa(password),
+            gender: gender,
+          });
+          write_file(usersFileName, allUsers);
+          res.writeHead(201, options);
+          res.end(JSON.stringify({ msg: "Authoritated" }));
+        }
+      });
+    }
+
   }
 
   if (req.method === "PUT") {
