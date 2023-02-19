@@ -72,6 +72,27 @@ const server = http.createServer((req, res) => {
       });
     }
 
+    if (req.url === "/auth/login") {
+      req.on("data", (chunk) => {
+        const { email, password } = JSON.parse(chunk);
+        const hasUser = read_file(usersFileName).find(
+          (user) => user.email === email
+        );
+
+        if (hasUser) {
+          if (atob(hasUser.password) === password) {
+            res.writeHead(200, options);
+            res.end(JSON.stringify({ token: btoa(hasUser) }));
+          } else {
+            res.writeHead(404, options);
+            res.end(JSON.stringify({ msg: "Incorrect password" }));
+          }
+        } else {
+          res.writeHead(404, options);
+          res.end(JSON.stringify({ msg: "This email already exists" }));
+        }
+      });
+    }
   }
 
   if (req.method === "PUT") {
